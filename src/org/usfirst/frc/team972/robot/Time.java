@@ -1,20 +1,36 @@
 package org.usfirst.frc.team972.robot;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
 public class Time {
-	private static long msInit = 0;
+	/**Variable Declarations*/
+	//Start time, captured in_init()
+	private static long msInit;
+	//Current lap time
+	private static long msLap;
+	//Past lap time
+	private static long msPastLap;
 	
-	public static void init() {
+	/**Methods*/
+	//Captures variables marking start time
+	public void init() {
 		msInit = System.currentTimeMillis();
+		msPastLap = System.currentTimeMillis();
 	}
 	
-	public static double get() {
+	//Goes through one lap resetting variables for next lap and returns the time since last lap
+	public double lap() {
+		msLap = System.currentTimeMillis();
+		long msTemp = msPastLap;
+		msPastLap = msLap;
+		return (msLap-msTemp)/1000;
+	}
+	
+	//Reads the time since the previous lap without starting a new lap
+	public long readOnlyLapTime() {
+		return (msLap-msPastLap)/1000;
+	}
+	
+	//Returns the time since initiation
+	public double get() {
 		return ((double)(System.currentTimeMillis() - msInit));
-	}
-	
-	public static void updateSmartDashboard() {
-		SmartDashboard.putNumber("Init Time", msInit);
-		SmartDashboard.putNumber("Current Time", get());
 	}
 }
